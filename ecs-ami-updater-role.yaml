@@ -1,0 +1,35 @@
+---
+  AWSTemplateFormatVersion: "2010-09-09"
+  Resources:
+    ECSAMIUpdatePolicy:
+      Type: "AWS::IAM::Policy"
+      Properties:
+        PolicyDocument:
+          Statement:
+            -
+              Action:
+                - "cloudformation:UpdateStack"
+                - "ecs:ListAttributes"
+                - "ssm:GetParameter"
+                - "iam:PassRole"
+                - "iam:CreateServiceLinkedRole"
+                - "logs:CreateLogGroup"
+                - "logs:CreateLogStream"
+                - "logs:PutLogEvents"
+              Effect: "Allow"
+              Resource: "*"
+        PolicyName: "ECSAMIUpdatePolicy"
+        Roles:
+          -
+            Ref: "ECSAMIUpdateRole"
+    ECSAMIUpdateRole:
+      Type: "AWS::IAM::Role"
+      Properties:
+        AssumeRolePolicyDocument:
+          Statement:
+            -
+              Action: "sts:AssumeRole"
+              Effect: "Allow"
+              Principal:
+                Service:
+                  - "ecs-tasks.amazonaws.com"

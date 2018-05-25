@@ -37,7 +37,6 @@ print("DEBUG: latest ECS AMI ID is %s" % latest_ami)
 
 if current_ami != latest_ami:
     print("INFO: newer AMI is available, updating Cloudformation stack")
-    exit(2)
     client = boto3.client('cloudformation')
     response = client.update_stack(
         StackName=args.stack_name,
