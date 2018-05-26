@@ -8,6 +8,7 @@
           Statement:
             -
               Action:
+                - "cloudformation:DescribeStacks"
                 - "cloudformation:UpdateStack"
                 - "ecs:ListAttributes"
                 - "ssm:GetParameter"

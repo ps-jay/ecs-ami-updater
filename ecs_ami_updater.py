@@ -35,14 +35,28 @@ response = client.get_parameter(Name='/aws/service/ecs/optimized-ami/amazon-linu
 latest_ami = response['Parameter']['Value']
 print("DEBUG: latest ECS AMI ID is %s" % latest_ami)
 
-if current_ami != latest_ami:
-    print("INFO: newer AMI is available, updating Cloudformation stack")
-    client = boto3.client('cloudformation')
-    response = client.update_stack(
-        StackName=args.stack_name,
-        UsePreviousTemplate=True,
-        Parameters=[{
-            'ParameterKey': args.ami_stack_param,
-            'ParameterValue': latest_ami,
-        }],
-    )
+if current_ami == latest_ami:
+    print("INFO: using the most up-to-date AMI, nothing to do")
+    exit(0)
+
+# Else, update the stack
+print("INFO: newer AMI is available, updating Cloudformation stack")
+client = boto3.client('cloudformation')
+
+# First, discover all the params
+response = client.describe_stacks(StackName=args.stack_name,)
+parameters = []
+for param in response['Stacks'][0]['Parameters']:
+    if param['ParameterKey'] == args.ami_stack_param:
+        param['ParameterValue'] = latest_ami
+        param['UsePreviousValue'] = False
+    parameters += [param]
+
+# Next, update the stack
+response = client.update_stack(
+    StackName=args.stack_name,
+    UsePreviousTemplate=True,
+    Parameters=parameters,
+    Capabilities=['CAPABILITY_NAMED_IAM'],
+)
+print("INFO: stack update in progress, expect some new ECS hosts soon!")
