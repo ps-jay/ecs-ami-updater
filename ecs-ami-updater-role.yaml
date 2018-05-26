@@ -8,10 +8,20 @@
           Statement:
             -
               Action:
+                - "autoscaling:CreateLaunchConfiguration"
+                - "autoscaling:DeleteLaunchConfiguration"
+                - "autoscaling:Describe*"
+                - "autoscaling:ResumeProcesses"
+                - "autoscaling:Set*"
+                - "autoscaling:SuspendProcesses"
+                - "autoscaling:TerminateInstanceInAutoScalingGroup"
+                - "autoscaling:UpdateAutoScalingGroup"
                 - "cloudformation:DescribeStacks"
                 - "cloudformation:UpdateStack"
+                - "ec2:Describe*"
                 - "ecs:ListAttributes"
                 - "ssm:GetParameter"
+                - "iam:GetRole"
                 - "iam:PassRole"
                 - "iam:CreateServiceLinkedRole"
                 - "logs:CreateLogGroup"
