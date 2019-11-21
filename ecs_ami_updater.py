@@ -31,7 +31,7 @@ print("DEBUG: current ECS AMI ID is %s" % current_ami)
 
 # Get latest ECS AMI for the region
 client = boto3.client('ssm')
-response = client.get_parameter(Name='/aws/service/ecs/optimized-ami/amazon-linux/recommended/image_id',)
+response = client.get_parameter(Name='/aws/service/ecs/optimized-ami/amazon-linux-2/recommended/image_id',)
 latest_ami = response['Parameter']['Value']
 print("DEBUG: latest ECS AMI ID is %s" % latest_ami)
 
